@@ -9,6 +9,49 @@ Released for free under a Creative Commons Attribution 2.5 License
 
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <title>Forever Home</title>
+
+<?php
+session_start();
+include "miniondb_connect.php";
+
+
+
+//$query1 = "SELECT Name, Age, Sex, fixed FROM pet_info WHERE owner_id = '" . $_SESSION[owner_id] . "'";
+//$result1 = mysqli_query($db, $query1)
+	//		or die("Error Querying Database");
+		
+/*
+if ($row = mysqli_fetch_array($result))
+         {
+		 $pword = $row['Name'];
+  		 $user = $row['Age'];
+		 $sex = $row['Sex'];
+		 $fixed = $row['fixed'];
+		 echo '<META http-equiv="refresh" content="0;URL=welcome.php">';
+		}
+		*/
+	if (isset($_POST['animal'])) {
+		$type = mysqli_real_escape_string($db, trim($_POST['animal']));
+		//$query2 = "SELECT pi.Name, pi.Age, pi.Sex, pi.fixed FROM pet_info pi 
+		//NATURAL JOIN type t WHERE t.type = '$type';
+		
+		$query2 = "SELECT pet_info.Name, pet_info.Age, pet_info.Sex, pet_info.fixed FROM pet_info  
+		NATURAL JOIN type WHERE type.animal = 'dog'";
+		$result2 = mysqli_query($db, $query2)
+			or die("Error Querying Database");
+			
+			if ($row = mysqli_fetch_array($result2))
+         {
+		 $Name = $row['Name'];
+  		 $Age = $row['Age'];
+		 $sex = $row['Sex'];
+		 $fixed = $row['fixed'];
+		 echo '<META http-equiv="refresh" content="0;URL=searchInfo.php">';
+		}
+		
+		}
+
+?>
 <meta name="keywords" content="" />
 <meta name="description" content="" />
 <link href="default.css" rel="stylesheet" type="text/css" />

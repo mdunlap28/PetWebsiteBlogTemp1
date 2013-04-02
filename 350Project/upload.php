@@ -1,28 +1,17 @@
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <title>Forever Home</title>
+
 <?php
+session_start();
 include "miniondb_connect.php";
 
-		$type = mysqli_real_escape_string($db, trim($_POST['animal']));
-		//$query2 = "SELECT pi.Name, pi.Age, pi.Sex, pi.fixed FROM pet_info pi 
-		//NATURAL JOIN type t WHERE t.type = '$type';
-		
-		$query2 = "SELECT pet_info.Name, pet_info.Age, pet_info.Sex, pet_info.fixed FROM pet_info  
-		NATURAL JOIN type WHERE type.animal = 'dog'";
-		$result2 = mysqli_query($db, $query2)
-			or die("Error Querying Database");
-			
-		if ($row = mysqli_fetch_array($result2))
-         {
-		 $Name = $row['Name'];
-  		 $Age = $row['Age'];
-		 $sex = $row['Sex'];
-		 $fixed = $row['fixed'];
-}
+$query1 = "SELECT Name, Age, Sex, fixed FROM pet_info WHERE owner_id = '" . $_SESSION[owner_id] . "'";
+$query2 = "SELECT color FROM color WHERE owner_id = '" . $_SESSION[owner_id] . "'";
+$query3 = "SELECT vaccine FROM vaccines WHERE where owner_id = '" . $_SESSION[owner_id] . "'";
 
+$query4 = "SELECT pi.temp FROM pet_info pi NATURAL JOIN temperment t WHERE owner_id = '" . $_SESSION[owner_id] . "'";
 
 ?>
-
 <meta name="keywords" content="" />
 <meta name="description" content="" />
 <link href="default.css" rel="stylesheet" type="text/css" />
@@ -47,16 +36,12 @@ include "miniondb_connect.php";
 <div id="main">
 		<div id="Results" class="post">
 			<p><img src="images/pets2.jpg" alt="" width="500" height="300" /></p>
-			<h1 class="title">Results</h1>
-			<!-- Results -->		
-			<?php
-			echo "<h1>Name: " . $Name  . " </h1>\n";
-			echo "<h1>Age: " . $Age  . " </h1>\n";
-			echo "<h1>Sex: " . $Sex  . " </h1>\n";
-			echo "<h1>Spayed/Neutered: " . $fixed  . " </h1>\n";
-			?>
+			<table>
+					<tr><td>Minion name: </td><td>
+					
+			</table>
 			
-			</div>
+				</div>
 	</div>
 <div id="footer">
 	<p id="legal">Copyright &copy; 2013 Forever Home. All Rights Reserved. Designed by <a href="http://www.freecsstemplates.org">FCT</a>.</p>

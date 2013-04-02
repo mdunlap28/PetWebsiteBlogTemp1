@@ -34,8 +34,6 @@ Released for free under a Creative Commons Attribution 2.5 License
 		$num_rows = mysqli_num_rows($unameresult);
 		//echo $num_rows;
 		if ($num_rows == 0){
-			//echo '<META http-equiv="refresh" content="0;URL=verifylogin.php">';
-			
 			$query = "INSERT INTO ownercontactinfo (First, Last, Phone, email) 
 			VALUES ('$firstName', '$lastName', '$phone', '$email')";
 

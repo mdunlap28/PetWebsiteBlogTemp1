@@ -14,7 +14,7 @@ Released for free under a Creative Commons Attribution 2.5 License
 session_start();
 include "miniondb_connect.php";
 	
-	if (isset($_POST['minionName'])) {
+	if (isset($_POST['minionName'])){//&&(isset($_FILES['image']) && $_FILES['image']['size'] > 0)) {
 		$minionName = mysqli_real_escape_string($db, trim($_POST['minionName']));
 		$age = mysqli_real_escape_string($db, trim($_POST['age']));
 		$sex = mysqli_real_escape_string($db, trim($_POST['sex']));
@@ -27,50 +27,94 @@ include "miniondb_connect.php";
 		$temperment = mysqli_real_escape_string($db, trim($_POST['temp']));
 		$size = mysqli_real_escape_string($db, trim($_POST['size']));
 		$picture = mysqli_real_escape_string($db, trim($_POST['uploadPicture']));
+		//echo $picture;
+		//$target = "C:\xampp\htdocs\PetWebsiteBlogTemp\350Project\pet_pics";
+		//$target = $target . basename($_FILES['image']['name']);
+		//$pic =($_FILES['$image']['name']);
+		//$picture = mysqli_real_escape_string($db, trim($pic));
 		
 		
 		$query2 = "INSERT INTO color (color) VALUES ('$color')";
-		
-		$query3 = "INSERT INTO vaccines(vaccine) VALUES ('$vaccines')";
-		
-		$query5 = "INSERT INTO temperment(temperment) VALUES ('$temperment')";
-		
-		$query6 = "INSERT INTO type (animal) VALUES ('$type')";
-		
-		$query7 = "INSERT INTO breed_id (breed) VALUES ('$breed')";
-		
-		$query8 = "INSERT INTO picture (picture) VALUES ('$picture')";
-		
-		$query9 = "INSERT INTO pet_size (size) VALUES ('$size')";
-		
-		$query1 = "INSERT INTO pet_info (owner_id, Name, Age, Sex, fixed,temp_id, type_id, breed_id, size_id, pic_id, med_id) 
-			VALUES ('{$_SESSION['owner_id']}', '$minionName', '$age', '$sex', '$fixed', LAST_INSERT_ID(),
-			LAST_INSERT_ID(), LAST_INSERT_ID(), LAST_INSERT_ID(), LAST_INSERT_ID(), LAST_INSERT_ID())";
-
 		$result2 = mysqli_query($db, $query2)
 			or die("Error Querying Database");
-			
+		$query2id = mysqli_insert_id($db);
+		//echo $query2id;
+		
+		$query3 = "INSERT INTO vaccines(vaccine) VALUES ('$vaccines')";
 		$result3 = mysqli_query($db, $query3)
 			or die("Error Querying Database");
-
+		$query3id = mysqli_insert_id($db);
+		//echo $query3id;
+		
+		$query4 = "INSERT INTO medical(medical) VALUES ('$condition')";
+		$result4 = mysqli_query($db, $query4)
+			or die("Error Querying Database");
+		$query4id = mysqli_insert_id($db);
+		//echo $query4id;
+		
+		$query5 = "INSERT INTO temperment(temp) VALUES ('$temperment')";
 		$result5 = mysqli_query($db, $query5)
 			or die("Error Querying Database");
-			
+		$query5id = mysqli_insert_id($db);
+		//echo $query5id;
+		
+		$query6 = "INSERT INTO type (animal) VALUES ('$type')";
 		$result6 = mysqli_query($db, $query6)
 			or die("Error Querying Database");
-			
+		$query6id = mysqli_insert_id($db);
+		//echo $query6id;
+		
+		$query7 = "INSERT INTO breed_id (breed) VALUES ('$breed')";
 		$result7 = mysqli_query($db, $query7)
 			or die("Error Querying Database");
-			
+		$query7id = mysqli_insert_id($db);
+		//echo $query7id;
+		
+		// Create the query and insert
+		$query8 = "INSERT INTO picture (picture) VALUES ('$picture')";
 		$result8 = mysqli_query($db, $query8)
 			or die("Error Querying Database");
-			
+		$query8id = mysqli_insert_id($db);
+		
+		//echo $query8id;
+		
+		/*if (move_uploaded_file($_FILES['image']['tmp_name'], $target)){
+		echo "The file ". basename( $_FILES['image']['name']). " has been uploaded, and your information has been added to the directory";
+		}
+		else {
+
+		//Gives and error if its not
+		echo "Sorry, there was a problem uploading your file.";
+		}
+		*/
+		$query9 = "INSERT INTO pet_size (size) VALUES ('$size')";
 		$result9 = mysqli_query($db, $query9)
 			or die("Error Querying Database");
-			
+		$query9id = mysqli_insert_id($db);
+		//echo $query9id;
+		
+		$query1 = "INSERT INTO pet_info (owner_id, Name, Age, Sex, fixed,temp_id, type_id, breed_id, size_id, pic_id, med_id) 
+			VALUES ('{$_SESSION['owner_id']}', '$minionName', '$age', '$sex', '$fixed', '$query5id', 
+			'$query6id', '$query7id', '$query9id', '$query8id', '$query4id')";
+		//echo $query1;	
+		
 		$result1 = mysqli_query($db, $query1)
 			or die("Error Querying Database");
+		$query1id = mysqli_insert_id($db);	
+		//echo $query1id;
+		
+		$query10 = "INSERT INTO pet_color(pet_id, color_id) VALUES ('$query1id', '$query2id')";
+		//echo $query10;
+		$result10 = mysqli_query($db, $query10)
+			or die("Error Querying Database");
 			
+		$query11 = "INSERT INTO pet_vac(pet_id, vac_id) VALUES ('$query1id', '$query3id')";
+		//echo $query11;
+		$result11 = mysqli_query($db, $query11)
+			or die("Error Querying Database");
+			
+		//header("location:upload.php");
+
 		}
 		
 	    ?>
@@ -161,10 +205,11 @@ include "miniondb_connect.php";
 					<tr><td>Please provide us some information about your pets temperment/personality. Ex. Good with Children. Energetic.</td><td>
 					<textarea id="temp" name="temp" cols="30" rows="6"></textarea></td></tr>
 					
-				<tr><td>Upload Picture: </td><td><form name="picture" action="" method="post">
-					<input type="file" name="uploadPicture" />
-				</form></td></tr>
 					
+					<tr><td>Upload Picture: </td><td><form name="picture" action="" method="post">
+					<input type="file" name="uploadPicture"/>
+					</form></td></tr>
+				
 					<tr><td>&nbsp;</td><td><input type="submit" value="Register Minion" /></td></tr>
 					</table>
 					
